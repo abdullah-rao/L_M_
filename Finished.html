@@ -418,32 +418,28 @@ document.getElementById('blankBtn').addEventListener('click', async () => {
     main.appendChild(blankScreen);
     // ================= STATE =================
     let segments = [];
-    const colors = [
-        "#ef4444", // red
-        "#f97316", // orange
-        "#f59e0b", // amber
-        "#eab308", // yellow
-        "#84cc16", // lime
-        "#22c55e", // green
-        "#10b981", // emerald
-        "#14b8a6", // teal
-        "#06b6d4", // cyan
-        "#0ea5e9", // sky blue
-        "#3b82f6", // blue
-        "#6366f1", // indigo
-        "#8b5cf6", // violet
-        "#a855f7", // purple
-        "#d946ef", // fuchsia
-        "#ec4899", // pink
-        "#f43f5e", // rose
-        "#fb7185", // soft red-pink
-        "#facc15", // bright yellow
-        "#34d399", // mint green
-        "#2dd4bf", // aqua
-        "#60a5fa", // light blue
-        "#c084fc", // light violet
-        "#f472b6"  // light pink
-    ];
+const colors = [
+  "#d94f70", // rose red
+  "#3ea6d6", // cyan blue
+  "#c49f00", // mustard yellow
+  "#7c5ce0", // rich purple
+  "#4fbe6b", // green
+  "#3b7ff0", // blue
+  "#d9893d", // orange
+  "#37b8af", // teal
+  "#d96f3d", // burnt peach
+  "#88b82f", // lime
+  "#4b9bd6", // sky blue
+  "#9d72e8", // lavender
+  "#c98d52", // apricot
+  "#369f93", // aqua teal
+  "#68b876", // soft green
+  "#5b8df0", // cornflower
+  "#b59d36", // muted gold
+  "#8968e0", // violet
+  "#2fa08f", // deep teal
+  "#9d86b8"  // dusty purple
+];
     let rotation = 0;
     let velocity = 0;
     let spinning = false;
@@ -452,7 +448,7 @@ document.getElementById('blankBtn').addEventListener('click', async () => {
         wheelContainer.style.position = 'absolute';
         wheelContainer.style.top = '50%';
         wheelContainer.style.left = '50%';
-        wheelContainer.style.transform = 'translate(-50%, -50%)';
+        wheelContainer.style.transform = 'translate(-50%, -50%) scale(2)';
         wheelContainer.style.width = '320px';
         wheelContainer.style.height = '320px';
     const canvas = document.createElement('canvas');
@@ -516,6 +512,7 @@ spinBtn.style.color = '#fff';
             ctx.rotate(angle + arc / 2);
             ctx.fillStyle = "#fff";
             ctx.font = "14px sans-serif";
+			ctx.textShadow = "2px 4px 6px #000";
             ctx.textAlign = "right";
             ctx.fillText(segments[i], radius - 10, 5);
             ctx.restore();
@@ -724,13 +721,13 @@ eliminationBtn.addEventListener('click', async () => {
     // Scrollable grid container inside main
     const gridContainer = document.createElement('div');
     gridContainer.style.position = 'relative';
-    gridContainer.style.width = '100%';
+    gridContainer.style.width = 'calc(100% - (60px * 8))';
     gridContainer.style.height = '100%';
     gridContainer.style.overflow = 'auto';
     gridContainer.style.display = 'grid';
-    gridContainer.style.gridTemplateColumns = `repeat(auto-fit, 40px)`; // fills horizontally first
+    gridContainer.style.gridTemplateColumns = `repeat(auto-fit, 60px)`; // fills horizontally first
     gridContainer.style.justifyContent = 'center';
-    gridContainer.style.gridAutoRows = '40px';
+    gridContainer.style.gridAutoRows = '60px';
     gridContainer.style.gap = '5px';
     gridContainer.style.padding = '10px';
     gridContainer.style.backgroundColor = '#00000091';
@@ -741,8 +738,8 @@ eliminationBtn.addEventListener('click', async () => {
     const cells = lines.map(l => {
         const [username, number] = l.split(':');
         const cell = document.createElement('div');
-            cell.style.width = '40px';
-            cell.style.height = '40px';
+            cell.style.width = '60px';
+            cell.style.height = '60px';
             cell.style.background = 'rgba(255,255,255,0.1)';
             cell.style.display = 'flex';
             cell.style.alignItems = 'center';
@@ -774,7 +771,7 @@ eliminationBtn.addEventListener('click', async () => {
     }
     // Highlight last cell
     const winner = eliminationOrder[eliminationOrder.length - 1];
-    winner.style.background = 'rgba(255,255,0,0.6)';
+    winner.style.background = '#00FFD9';
     winner.style.color = '#000';
 });
 // Keyframes for pop animation
