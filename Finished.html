@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luis Moncada - Pollos</title>
+<style>
+    /* ======= Nokia Font ======= */
+    @font-face {
+        font-family: 'Nokia';
+        src: url('nokia.ttf') format('truetype');
+    }
+    :root {
+        --teal: #1abc9c;
+        --blue: #3498db;
+        --purple: #9b59b6;
+        --light-purple: #d7bde2;
+        --menu-bg: rgba(44, 62, 80, 0.9);
+        --text-color: #ffffff;
+        --input-bg: rgba(0, 0, 0, 0.5);
+    }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Nokia', monospace !important;
+        transition: all 0.3s ease;
+    }
+    body {
+        background: url('bg.png') no-repeat center center fixed;
+        background-size: cover;
+        color: var(--text-color);
+        overflow-x: hidden;
+    }
+/* Universal button style */
+button, .btn {
+ padding: 0.3em 1em;       /* less vertical padding, keeps width readable */
+  font-size: 0.85rem;       /* smaller text */
+  border: none;
+  border-radius: 25px;      /* pill shape, still looks sleek */
+
+background: linear-gradient(135deg, #00ffe5, #007bff, #c700ff);
+
+/*background: linear-gradient(135deg, rgba(0,128,128,0.7), rgba(0,0,255,0.7), rgba(128,0,128,0.7)),
+            linear-gradient(45deg, rgba(255,255,255,0.1), transparent);
+background: linear-gradient(135deg, #008080, #0044cc, #6a0dad);
+background: linear-gradient(135deg, teal 0%, cyan 35%, blue 65%, purple 100%);*/
+
+
+
+color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px); /* soft transparency effect */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover effect: glow and move gradient */
+button:hover, .btn:hover {
+  background-position: right center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  transform: translateY(-2px);
+}
+
+/* Optional: animated gradient effect */
+button::before, .btn::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, teal, blue, purple, teal);
+  background-size: 400% 400%;
+  animation: gradientShift 6s ease infinite;
+  opacity: 0.3;
+  border-radius: 50px;
+  z-index: 0;
+}
+
+button span, .btn span {
+  position: relative; /* ensures text stays above gradient */
+  z-index: 1;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+    /* ======= Scrollbar ======= */
+    ::-webkit-scrollbar {
+    width: 12px; height: 12px;
+    }
+    ::-webkit-scrollbar-track {
+    background: var(--light-purple); border-radius: 12px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(45deg, var(--teal), var(--purple));
+        border-radius: 12px;
+        border: 2px solid rgba(255,255,255,0.1);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, var(--blue), var(--light-purple));
+    }
+    /* ======= Sidebar ======= */
+    #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 220px;
+    height: 100%;
+    background: var(--menu-bg);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+    z-index: 1000;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(6px);
+    }
+    /* ======= Main Content ======= */
+    #main {
+        margin-left: 240px;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+    /* ======= Headers ======= */
+    h1 {
+        text-align: center;
+        padding: 20px;
+        background: linear-gradient(135deg, var(--blue), var(--purple));
+        color: #fff;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+    /* ======= Inputs & Textareas ======= */
+    input[type="text"], textarea {
+        width: 100%;
+        background: linear-gradient(145deg, rgba(0,0,0,0.6), rgba(0,0,50,0.3));
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.2);
+        padding: 10px;
+        border-radius: 8px;
+        outline: none;
+        font-family: inherit;
+        backdrop-filter: blur(4px);
+        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+    }
+    input[type="text"]:focus, textarea:focus {
+        border: 1px solid var(--teal);
+        box-shadow: 0 0 15px var(--blue);
+        background: linear-gradient(145deg, rgba(0,0,50,0.5), rgba(0,50,50,0.2));
+    }
+
+
+    /* ======= Pollos Screen ======= */
+    #pollosScreen {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        background: url('pollosresult.png') no-repeat center center;
+        background-size: contain;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 72px;
+        color: yellow;
+        font-weight: bold;
+        flex-direction: column;
+    }
+    #pollosNumber {
+        font-weight: bold;
+        position: absolute;
+        font-size: 35px;
+        color: #9cf8ff;
+        top: 36%;
+        left: 35%;
+        transform: translate(-50%, -50%);
+    }
+    /* ======= Scrollable Outputs ======= */
+    #shuffleHistory, #input, #output {
+        margin-top: 10px;
+        width: 100%;
+        overflow-y: auto;
+        background: rgba(0,0,0,0.3);
+        color: #fff;
+        padding: 12px;
+        border-radius: 10px;
+        white-space: pre-line;
+        backdrop-filter: blur(4px);
+    }
+    #shuffleHistory {
+    height: 200px;
+    }
+    #input, #output {
+    height: 100px;
+    }
+    /* ======= Slider Container ======= */
+    #sliderContainer {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    /* ======= Winner Animation ======= */
+    #winner {
+        animation: winner_loop 6s linear infinite;
+    }
+    @keyframes winner_loop {
+        0% { filter: hue-rotate(0deg); }
+        100% { filter: hue-rotate(360deg); }
+    }
+</style>
+</head>
+<body>
+<div id="sidebar">
+    <h3 style="color:white; margin:0;">Manual</h3>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+        <input id="pollosInput" type="number" placeholder="Enter a number" value="100"
+        style="width:100%; padding:8px; border-radius:6px; border:none;">
+        <button id="pollosBtn" style="width:100%;  color:white; padding:10px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+        Pollos
+        </button>
+        <div id="sliderContainer">
+        <input type="range" id="shuffleSlider" min="0" max="500" value="0">
+        </div>
+        <span id="shuffleValue" style="color:white;">0</span>
+        <textarea id="shuffleHistory" readonly placeholder="Shuffle numbers will appear here..."></textarea>
+<hr>
+        <h3 style="color:white; margin:0;">Automated</h3>
+        <textarea id="input" placeholder="Paste Twitch chat..."></textarea>
+        <button onclick="sanitize()"  style="width:100%;  color:white; padding:10px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Sanitize</button>
+        <textarea id="output" placeholder="Cleaned output..." readonly></textarea>
+       <hr> <button id="autopollosBtn" style="width:100%;  color:white; padding:10px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Auto-Pollos</button>
+       <hr> <button id="eliminationBtn" style="width:100%;  color:white; padding:10px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Elimination</button>
+        <div id="eliminationSpeedContainer" style="display:flex; gap:10px; align-items:center;">
+        <input type="range" id="eliminationSpeedSlider" min="50" max="2000" value="500">
+        </div>
+        <span id="eliminationSpeedValue" style="color:white;"></span><hr>
+        <h3 style="color:white; margin:0;">Wheel</h3>
+        <button id="blankBtn" style="width:100%;  color:white; padding:10px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+        Create Wheel
+        </button>
+        <button id="blankBtnAddItem" style="width:100%;  color:white; padding:10px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+        Add Chat
+        </button>
+        <textarea id="itemInput"></textarea>
+               <button id="addItemBtn" style="width:100%;  color:white; padding:10px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+        Add to Wheel
+        </button>
+
+        <button id="blankBtnRemoveItem" style="width:100%;  color:white; padding:10px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+        Remove
+        </button>
+        <button id="blankBtnSaveWheeldata" style="width:100%;  color:white; padding:10px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+        Save
+        </button>
+        <button id="blankBtnLoadWheeldata" style="width:100%;  color:white; padding:10px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+        Load
+        </button>
+    </div>
+</div>
+<div id="main">
+    <!-- WHEEL -->
+    <div id="wheelContainer" style="display:none; flex-direction:column; align-items:center; margin-top:20px;">
+        <svg id="wheel" width="600" height="600"></svg>
+        <div id="winner" style="margin-top:10px; font-size:65px; font-weight:bold; color: #5d79ff; z-index: 5; text-shadow: 0px 0px 5px #000, 2px 4px 6px #000; position: absolute;">
+        </div>
+    </div>
+</div>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+// ------------------ SANITIZER ------------------
+function sanitize() {
+    const input = document.getElementById('input').value;
+    const lines = input.split('\n');
+    const output = [];
+    const regex = /(?:^|\s)([a-zA-Z0-9_]+)\s*:\s*(\d+)$/;
+    const usedUsers = new Set();
+    const usedNumbers = new Set();
+
+    lines.forEach(line => {
+    const trimmed = line.trim();
+    const match = trimmed.match(regex);
+    if(match){
+    let username = match[1];
+    const number = match[2];
+    username = username.replace(/^\d+/, '');
+    if(username.length>0){
+    if(usedUsers.has(username)) return;
+    if(usedNumbers.has(number)) return;
+    usedUsers.add(username);
+    usedNumbers.add(number);
+    output.push(`${username}:${number}`);
+    }
+    }
+    });
+
+    document.getElementById('output').value = output.join('\n');
+}
+// ------------------ POLLOS BUTTON ------------------
+const main = document.getElementById('main');
+const shuffleSlider = document.getElementById('shuffleSlider');
+const shuffleValue = document.getElementById('shuffleValue');
+const shuffleHistory = document.getElementById('shuffleHistory');
+addItemBtn.addEventListener('click', () => {
+    const newItem = itemInput.value.trim();
+    if(newItem) {
+    segments.push(newItem);  // add to your array
+    itemInput.value = '';    // clear textarea
+    }
+});
+shuffleSlider.addEventListener('input', () => {
+    shuffleValue.textContent = shuffleSlider.value;
+});
+document.getElementById('pollosBtn').addEventListener('click', async () => {
+    const maxNumber = Number(document.getElementById('pollosInput').value);
+    const shuffleTimes = Number(shuffleSlider.value);
+    // Show single GIF fullscreen
+    const singleGif = document.createElement('img');
+        singleGif.src = 'pollos.gif';
+        singleGif.style.position = 'absolute';
+        singleGif.style.top = '0';
+        singleGif.style.left = '0';
+        singleGif.style.width = '100%';
+        singleGif.style.height = '100%';
+        singleGif.style.objectFit = 'cover';
+        singleGif.style.zIndex = '10';
+    main.appendChild(singleGif);
+    await new Promise(r => setTimeout(r, 5500));
+    document.body.style.backgroundImage = 'none';
+document.body.style.backgroundColor = '#000';  // pure black
+// Optional: you could do a gradient instead
+document.body.style.background = 'linear-gradient(135deg, #0d0d0d, #1a1a1a)';
+    main.innerHTML = '';
+    shuffleHistory.value = '';
+    const shuffledNumbers = [];
+    for (let i=0; i<shuffleTimes; i++) {
+        const n = Math.floor(Math.random() * maxNumber) + 1;
+        shuffledNumbers.push(n);
+        shuffleHistory.value += n + "\n";
+        shuffleHistory.scrollTop = shuffleHistory.scrollHeight;
+        await new Promise(r => setTimeout(r, 1));
+    }
+    const finalNumber = Math.floor(Math.random() * maxNumber) + 1;
+    shuffledNumbers.push(finalNumber);
+    shuffleHistory.value += "**Final: " + finalNumber + "**\n";
+    shuffleHistory.scrollTop = shuffleHistory.scrollHeight;
+    const pollosScreen = document.createElement('div');
+    pollosScreen.id = 'pollosScreen';
+    const numberElem = document.createElement('div');
+    numberElem.id = 'pollosNumber';
+    numberElem.textContent = finalNumber;
+    pollosScreen.appendChild(numberElem);
+    main.appendChild(pollosScreen);
+});
+// ------------------ AUTO-POLLOS ------------------
+document.getElementById('autopollosBtn').addEventListener('click', async () => {
+const outputField = document.getElementById('output');
+const lines = outputField.value.split('\n').filter(line => line.trim() !== '');
+if (lines.length === 0) return;
+const randomLine = lines[Math.floor(Math.random() * lines.length)];
+const numberMatch = randomLine.match(/:(\d+)$/);
+if (!numberMatch) return;
+const chosenNumber = Number(numberMatch[1]);
+const singleGif = document.createElement('img');
+    singleGif.src = 'pollos.gif';
+    singleGif.style.position = 'absolute';
+    singleGif.style.top = '0';
+    singleGif.style.left = '0';
+    singleGif.style.width = '100%';
+    singleGif.style.height = '100%';
+    singleGif.style.objectFit = 'cover';
+    singleGif.style.zIndex = '10';
+main.appendChild(singleGif);
+await new Promise(r => setTimeout(r, 5500));
+main.innerHTML = '';
+const pollosScreen = document.createElement('div');
+    pollosScreen.id = 'pollosScreen';
+    const numberElem = document.createElement('div');
+    numberElem.id = 'pollosNumber';
+    numberElem.textContent = chosenNumber;
+    pollosScreen.appendChild(numberElem);
+    main.appendChild(pollosScreen);
+});
+// ------------------ ELIMINATION ------------------
+const eliminationBtn = document.getElementById('eliminationBtn');
+const eliminationSpeedSlider = document.getElementById('eliminationSpeedSlider');
+const eliminationSpeedValue = document.getElementById('eliminationSpeedValue');
+
+document.getElementById('blankBtn').addEventListener('click', async () => {
+    main.innerHTML = '';
+    const blankScreen = document.createElement('div');
+        blankScreen.style.position = 'absolute';
+        blankScreen.style.top = '0';
+        blankScreen.style.left = '0';
+        blankScreen.style.width = '100%';
+        blankScreen.style.height = '100%';
+        blankScreen.style.background = `
+        radial-gradient(circle at top left,#14b8a6 0%,transparent 35%),
+        radial-gradient(circle at bottom right,#8b5cf6 0%,transparent 35%),
+        linear-gradient(135deg,#061826,#0f172a,#1e1b4b)
+        `;
+        blankScreen.style.zIndex = '5';
+    main.appendChild(blankScreen);
+    // ================= STATE =================
+    let segments = [];
+    const colors = [
+        "#ef4444", // red
+        "#f97316", // orange
+        "#f59e0b", // amber
+        "#eab308", // yellow
+        "#84cc16", // lime
+        "#22c55e", // green
+        "#10b981", // emerald
+        "#14b8a6", // teal
+        "#06b6d4", // cyan
+        "#0ea5e9", // sky blue
+        "#3b82f6", // blue
+        "#6366f1", // indigo
+        "#8b5cf6", // violet
+        "#a855f7", // purple
+        "#d946ef", // fuchsia
+        "#ec4899", // pink
+        "#f43f5e", // rose
+        "#fb7185", // soft red-pink
+        "#facc15", // bright yellow
+        "#34d399", // mint green
+        "#2dd4bf", // aqua
+        "#60a5fa", // light blue
+        "#c084fc", // light violet
+        "#f472b6"  // light pink
+    ];
+    let rotation = 0;
+    let velocity = 0;
+    let spinning = false;
+    // ================= WHEEL =================
+    const wheelContainer = document.createElement('div');
+        wheelContainer.style.position = 'absolute';
+        wheelContainer.style.top = '50%';
+        wheelContainer.style.left = '50%';
+        wheelContainer.style.transform = 'translate(-50%, -50%)';
+        wheelContainer.style.width = '320px';
+        wheelContainer.style.height = '320px';
+    const canvas = document.createElement('canvas');
+        canvas.width = 320;
+        canvas.height = 320;
+    wheelContainer.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    // ================= POINTER (FIXED) =================
+    const pointer = document.createElement('div');
+        pointer.style.position = 'absolute';
+        pointer.style.top = '-18px';
+        pointer.style.left = '50%';
+        pointer.style.transform = 'translateX(-50%)';
+        pointer.style.width = '4px';
+        pointer.style.height = '28px';
+        pointer.style.background = '#ffffff';
+        pointer.style.borderRadius = '4px';
+        pointer.style.boxShadow = '0 0 6px rgba(255,255,255,0.6)';
+    wheelContainer.appendChild(pointer);
+    // ================= SPIN BUTTON =================
+    const spinBtn = document.createElement('button');
+        spinBtn.style.position = 'absolute';
+        spinBtn.style.top = '50%';
+        spinBtn.style.left = '50%';
+        spinBtn.style.transform = 'translate(-50%, -50%)';
+        spinBtn.style.width = '70px';
+        spinBtn.style.height = '70px';
+        spinBtn.style.borderRadius = '50%';
+        spinBtn.style.border = 'none';
+        spinBtn.style.backgroundImage = "url('spin.png')"; // Set the background image
+spinBtn.style.backgroundSize = 'cover';           // Make the image cover the button
+spinBtn.style.backgroundPosition = 'center';      // Center the image
+spinBtn.style.backgroundRepeat = 'no-repeat';     // Prevent tiling
+spinBtn.style.color = '#fff';
+    wheelContainer.appendChild(spinBtn);
+    blankScreen.appendChild(wheelContainer);
+    function drawWheel() {
+        const center = 160;
+        const radius = 160;
+        ctx.clearRect(0, 0, 320, 320);
+        if (segments.length === 0) {
+            // show placeholder text
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "18px sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("Add items to the wheel", center, center);
+        return;
+        }
+
+        const arc = (2 * Math.PI) / segments.length;
+
+        for (let i = 0; i < segments.length; i++) {
+            const angle = rotation + i * arc;
+            ctx.beginPath();
+            ctx.fillStyle = colors[i % colors.length];
+            ctx.moveTo(center, center);
+            ctx.arc(center, center, radius, angle, angle + arc);
+            ctx.fill();
+            ctx.save();
+            ctx.translate(center, center);
+            ctx.rotate(angle + arc / 2);
+            ctx.fillStyle = "#fff";
+            ctx.font = "14px sans-serif";
+            ctx.textAlign = "right";
+            ctx.fillText(segments[i], radius - 10, 5);
+            ctx.restore();
+        }
+    }
+    function getWinner() {
+        const arc = (2 * Math.PI) / segments.length;
+        // normalize rotation to 0–2π
+        let normalized = rotation % (2 * Math.PI);
+        if (normalized < 0) normalized += 2 * Math.PI;
+        const pointerOffset = -Math.PI / 2;
+        let adjusted = (normalized - pointerOffset) % (2 * Math.PI);
+        if (adjusted < 0) adjusted += 2 * Math.PI;
+        const index = Math.floor((segments.length - adjusted / arc)) % segments.length;
+        return segments[index];
+    }
+    function showWinner(winner) {
+        const winOverlay = document.createElement('div');
+        winOverlay.style.position = 'absolute';
+        winOverlay.style.top = '0';
+        winOverlay.style.left = '0';
+        winOverlay.style.width = '100%';
+        winOverlay.style.height = '100%';
+        winOverlay.style.display = 'flex';
+        winOverlay.style.alignItems = 'center';
+        winOverlay.style.justifyContent = 'center';
+        winOverlay.style.background = 'rgba(0,0,0,0.6)';
+        winOverlay.style.zIndex = '999';
+        winOverlay.style.color = 'white';
+        winOverlay.style.fontSize = '32px';
+        winOverlay.style.fontWeight = 'bold';
+        winOverlay.style.textAlign = 'center';
+        winOverlay.innerHTML = `🎉 Winner:<br>${winner}`;
+        winOverlay.addEventListener('click', () => {
+        winOverlay.remove();
+        });
+        blankScreen.appendChild(winOverlay);
+    }
+    function animate() {
+        velocity *= 0.985;
+        rotation += velocity;
+        drawWheel();
+        if (velocity < 0.002) {
+            spinning = false;
+            const winner = getWinner();
+            console.log("Winner:", winner);
+            showWinner(winner);
+            // optional voice announcement
+            const speech = new SpeechSynthesisUtterance(`The winner is ${winner}`);
+            speech.rate = 1;
+            speech.pitch = 1;
+            window.speechSynthesis.speak(speech);
+            return;
+        }
+        requestAnimationFrame(animate);
+    }
+    spinBtn.addEventListener('click', () => {
+        if (spinning) return;
+        spinning = true;
+        velocity = Math.random() * 0.3 + 0.3;
+        animate();
+    });
+    // ================= ADD =================
+    document.getElementById('blankBtnAddItem').addEventListener('click', () => {
+        const raw = document.getElementById('output')?.value || "";
+        // sanitize: remove dangerous chars, trim whitespace lines
+        const cleaned = raw
+        .replace(/[<>]/g, '')              // basic HTML injection protection
+        .split('\n')                       // split lines
+        .map(s => s.trim())                // trim each line
+        .filter(s => s.length > 0);        // remove empty lines
+        if (cleaned.length === 0) return;
+        // add all items to wheel
+        segments.push(...cleaned);
+        // clear textarea after use (optional but useful)
+        document.getElementById('output').value = '';
+        refreshRemoveDropdown();
+        drawWheel();
+    });
+    document.getElementById('addItemBtn').addEventListener('click', () => {
+        const raw = document.getElementById('itemInput')?.value || "";
+        const cleaned = raw
+        .replace(/[<>]/g, '')              // basic HTML injection protection
+        .split('\n')                       // split lines
+        .map(s => s.trim())                // trim each line
+        .filter(s => s.length > 0);        // remove empty lines
+        if (cleaned.length === 0) return;
+        segments.push(...cleaned);
+        document.getElementById('itemInput').value = '';
+        refreshRemoveDropdown();
+        drawWheel();
+    });
+    document.getElementById('blankBtnAddItem').addEventListener('click', () => {
+        const raw = document.getElementById('output')?.value || "";
+        // sanitize: remove dangerous chars, trim whitespace lines
+        const cleaned = raw
+        .replace(/[<>]/g, '')              // basic HTML injection protection
+        .split('\n')                       // split lines
+        .map(s => s.trim())                // trim each line
+        .filter(s => s.length > 0);        // remove empty lines
+        if (cleaned.length === 0) return;
+        // add all items to wheel
+        segments.push(...cleaned);
+        // clear textarea after use (optional but useful)
+        document.getElementById('output').value = '';
+        refreshRemoveDropdown();
+        drawWheel();
+    });
+    // ================= REMOVE =================
+    document.getElementById('blankBtnRemoveItem').addEventListener('click', () => {
+        const index = removeSelect.value;
+        if (segments.length === 0) return;
+        segments.splice(index, 1);
+        refreshRemoveDropdown();
+        drawWheel();
+    });
+    // ================= SAVE =================
+    document.getElementById('blankBtnSaveWheeldata').addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify(segments)], { type: "application/json" });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = "wheel.json";
+        a.click();
+    });
+    // ================= LOAD =================
+    document.getElementById('blankBtnLoadWheeldata').addEventListener('click', () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'application/json';
+        input.addEventListener('change', (e) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+        try {
+        segments = JSON.parse(ev.target.result);
+        refreshRemoveDropdown();
+        drawWheel();
+        } catch {
+        alert("Invalid JSON");
+        }
+        };
+        reader.readAsText(e.target.files[0]);
+        });
+        input.click();
+    });
+    // ================= DROPDOWN =================
+    const removeSelect = document.createElement('select');
+        removeSelect.style.width = '100%';
+        removeSelect.style.padding = '8px';
+        removeSelect.style.marginTop = '10px';
+        removeSelect.style.borderRadius = '6px';
+        removeSelect.style.border = 'none';
+        removeSelect.style.background = '#111827';
+        removeSelect.style.color = 'white';
+    document.getElementById('blankBtnRemoveItem')
+    .insertAdjacentElement('afterend', removeSelect);
+    function refreshRemoveDropdown() {
+        removeSelect.innerHTML = '';
+        segments.forEach((item, i) => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = item;
+        removeSelect.appendChild(opt);
+        });
+    }
+    refreshRemoveDropdown();
+    drawWheel();
+});
+eliminationSpeedSlider.addEventListener('input', () => {
+    eliminationSpeedValue.textContent = eliminationSpeedSlider.value + "ms";
+});
+eliminationBtn.addEventListener('click', async () => {
+
+
+    const outputField = document.getElementById('output');
+    const lines = outputField.value.split('\n').filter(line => line.trim() !== '');
+    if (lines.length === 0) return alert("Empty");
+
+        const singleGif = document.createElement('img');
+        singleGif.src = 'twins.gif';
+        singleGif.style.position = 'absolute';
+        singleGif.style.top = '0';
+        singleGif.style.left = '0';
+        singleGif.style.width = '100%';
+        singleGif.style.height = '100%';
+        singleGif.style.objectFit = 'cover';
+        singleGif.style.zIndex = '10';
+    main.appendChild(singleGif);
+    await new Promise(r => setTimeout(r, 8500));
+
+
+
+
+    main.innerHTML = '';
+    // Gradient background
+    const gradientDiv = document.createElement('div');
+    gradientDiv.style.position = 'absolute';
+    gradientDiv.style.top = 0;
+    gradientDiv.style.left = 0;
+    gradientDiv.style.width = '100%';
+    gradientDiv.style.height = '100%';
+    gradientDiv.style.background = 'linear-gradient(270deg, rgb(6 2 69), rgb(52, 152, 219), rgb(56 14 73), rgb(155, 89, 182)) 0% 0% / 800% 800%';
+    gradientDiv.style.backgroundSize = '800% 800%';
+    gradientDiv.style.animation = 'gradientAnim 15s ease infinite';
+    gradientDiv.style.zIndex = '0';
+    main.appendChild(gradientDiv);
+    // Scrollable grid container inside main
+    const gridContainer = document.createElement('div');
+    gridContainer.style.position = 'relative';
+    gridContainer.style.width = '100%';
+    gridContainer.style.height = '100%';
+    gridContainer.style.overflow = 'auto';
+    gridContainer.style.display = 'grid';
+    gridContainer.style.gridTemplateColumns = `repeat(auto-fit, 40px)`; // fills horizontally first
+    gridContainer.style.justifyContent = 'center';
+    gridContainer.style.gridAutoRows = '40px';
+    gridContainer.style.gap = '5px';
+    gridContainer.style.padding = '10px';
+    gridContainer.style.backgroundColor = '#00000091';
+    //#0000002e
+    gridContainer.style.zIndex = '5';
+    main.appendChild(gridContainer);
+    // Create cells
+    const cells = lines.map(l => {
+        const [username, number] = l.split(':');
+        const cell = document.createElement('div');
+            cell.style.width = '40px';
+            cell.style.height = '40px';
+            cell.style.background = 'rgba(255,255,255,0.1)';
+            cell.style.display = 'flex';
+            cell.style.alignItems = 'center';
+            cell.style.justifyContent = 'center';
+            cell.style.color = '#fff';
+            cell.style.fontWeight = 'bold';
+            cell.style.fontSize = '12px';
+            cell.style.borderRadius = '4px';
+            cell.style.position = 'relative';
+            cell.title = username;
+            cell.textContent = number;
+            gridContainer.appendChild(cell);
+        return cell;
+    });
+    // Shuffle elimination
+    const eliminationOrder = [...cells].sort(() => Math.random() - 0.5);
+
+    const speed = Number(eliminationSpeedSlider.value);
+    for (let i = 0; i < eliminationOrder.length - 1; i++) {
+    await new Promise(r => setTimeout(r, speed));
+    eliminationOrder[i].innerHTML = '';
+    const img = document.createElement('img');
+    img.src = 'luis.png';
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'contain';
+    img.style.animation = 'popAnim 0.3s';
+    eliminationOrder[i].appendChild(img);
+    }
+    // Highlight last cell
+    const winner = eliminationOrder[eliminationOrder.length - 1];
+    winner.style.background = 'rgba(255,255,0,0.6)';
+    winner.style.color = '#000';
+});
+// Keyframes for pop animation
+const popAnimRule = `@keyframes popAnim {
+    0% { transform: scale(0); opacity:0; }
+    50% { transform: scale(1.2); opacity:1; }
+    100% { transform: scale(1); opacity:1; }
+}`;
+document.styleSheets[0].insertRule(popAnimRule, document.styleSheets[0].cssRules.length);
+// Keyframes for gradient animation
+const gradientRule = `@keyframes gradientAnim {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}`;
+document.styleSheets[0].insertRule(gradientRule, document.styleSheets[0].cssRules.length);
+</script>
+</body>
+</html>
