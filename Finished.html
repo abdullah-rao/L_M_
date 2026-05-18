@@ -111,7 +111,7 @@ button span, .btn span {
     #sidebar {
     position: fixed;
     top: 0; left: 0;
-    width: 220px;
+/*    width: 220px;*/
     height: 100%;
     background: var(--menu-bg);
     padding: 20px;
@@ -287,12 +287,15 @@ button span, .btn span {
 function sanitize() {
     const input = document.getElementById('input').value;
     const lines = input.split('\n');
+    console.log(lines);
     const output = [];
     const regex = /(?:^|\s)([a-zA-Z0-9_]+)\s*:\s*(\d+)$/;
     const usedUsers = new Set();
     const usedNumbers = new Set();
 
     lines.forEach(line => {
+    line = line.replace(/\([^)]*\)/g, '');
+
     const trimmed = line.trim();
     const match = trimmed.match(regex);
     if(match){
@@ -308,7 +311,6 @@ function sanitize() {
     }
     }
     });
-
     document.getElementById('output').value = output.join('\n');
 }
 // ------------------ POLLOS BUTTON ------------------
@@ -581,6 +583,7 @@ spinBtn.style.color = '#fff';
         // sanitize: remove dangerous chars, trim whitespace lines
         const cleaned = raw
         .replace(/[<>]/g, '')              // basic HTML injection protection
+
         .split('\n')                       // split lines
         .map(s => s.trim())                // trim each line
         .filter(s => s.length > 0);        // remove empty lines
